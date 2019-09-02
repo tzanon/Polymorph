@@ -9,36 +9,26 @@ public class PlayerController : MonoBehaviour {
 	public float fireRate;
 	public Text healthText;
 	public GameObject Projectile;
-	public AudioClip fireSound, dmgSound, deathSound;
 
-	private int health, ammo, magSize;
+	private int health;
 	private float nextFire = 0.0f;
 	private bool invulnerable;
 	private Rigidbody2D rb;
 	private Transform tf;
-	//private AudioSource source;
 
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		rb.freezeRotation = true;
 		tf = GetComponent<Transform> ();
-		//source = GetComponent<AudioSource> ();
 		health = 100;
-		ammo = 20;
-		magSize = 20;
 		invulnerable = false;
 		SetHealthText ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//float newAngle = Mathf.Atan ((Input.mousePosition.x - tf.position.x) / (Input.mousePosition.y - tf.position.y));
-		//tf.rotation = (0f, 0f, Mathf.Rad2Deg * newAngle);
-
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, mousePos - tf.position);
-
-		//Debug.Log ("Mouse position is: " + (Input.mousePosition - tf.position));
 
 		if (Input.GetKey (KeyCode.Mouse0) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
@@ -73,11 +63,9 @@ public class PlayerController : MonoBehaviour {
 		if (health - dmg <= 0) {
 			health = 0;
 			Destroy (gameObject);
-			//play killed sound
 		} else {
 			StartCoroutine (Invulnerable ());
 			health -= dmg;
-			//play dmg sound
 		}
 		SetHealthText ();
 	}
@@ -88,7 +76,6 @@ public class PlayerController : MonoBehaviour {
 		Vector3 start = tf.position;
 		start += 1.05f * tf.up.normalized;
 		Instantiate (Projectile, start, rotation);
-		//play fire sound
 	}
 
 	void SetHealthText() {
